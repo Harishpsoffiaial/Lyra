@@ -23,7 +23,7 @@ $(document).ready(function () {
         amplitude: "1",
         speed: "0.30",
         autostart: true
-      });
+    });
 
     // Siri message animation
     $('.siri-message').textillate({
@@ -42,11 +42,21 @@ $(document).ready(function () {
 
     // mic button click event
 
-    $("#MicBtn").click(function () { 
+    $("#MicBtn").click(function () {
         eel.playAssistantSound()
         $("#Oval").attr("hidden", true);
         $("#SiriWave").attr("hidden", false);
         eel.allCommands()()
+    });
+
+    // settings buttom click event
+
+    $("#SettingsBtn").click(function () {
+        eel.playAssistantSound()
+        $("#Oval").attr("hidden", true);
+        $("#SiriWave").attr("hidden", false);
+        eel.allCommands()()
+
     });
 
 
@@ -95,17 +105,17 @@ $(document).ready(function () {
 
         let message = $("#chatbox").val();
         ShowHideButton(message)
-    
+
     });
-    
+
     // send button event handler
     $("#SendBtn").click(function () {
-    
+
         let message = $("#chatbox").val()
         PlayAssistant(message)
-    
+
     });
-    
+
 
     // enter press event handler on chat box
     $("#chatbox").keypress(function (e) {
