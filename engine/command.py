@@ -13,7 +13,7 @@ def speak(text):
     eel.receiverText(text)
     engine.runAndWait()
 
-
+@eel.expose
 def takecommand():
 
     r = sr.Recognizer()
