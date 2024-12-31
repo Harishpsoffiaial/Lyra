@@ -28,14 +28,13 @@ $(document).ready(function () {
     // Siri message animation
     $('.siri-message').textillate({
         loop: true,
+        //minDisplayTime: 2000,
         sync: true,
         in: {
-            effect: "fadeInUp",
-            sync: true,
+            effect: "fadeInLeft",
         },
         out: {
-            effect: "fadeOutUp",
-            sync: true,
+            effect: "fadeOutRight",
         },
 
     });
