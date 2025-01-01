@@ -179,7 +179,7 @@ def whatsApp(mobile_no, message, flag, name):
 
 # Weather API
 def WeatherApi(query):
-    query = query.replace("what is the weather in","").strip()
+    query = query.replace("what is the current weather in","").strip() #or query.replace("what is the current weather in","").strip()
     api_key = api_key_weather
     base_url = "https://api.openweathermap.org/data/2.5/weather"
     params = {
