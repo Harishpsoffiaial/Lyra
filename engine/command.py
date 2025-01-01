@@ -1,6 +1,7 @@
 import pyttsx3
 import speech_recognition as sr
 import eel
+from engine.helper import extract_yt_term, remove_words
 import time
 def speak(text):
     text = str(text)
@@ -63,7 +64,11 @@ def allCommands(message=1):
         
         elif "weather" in query:
             from engine.features import WeatherApi
+            words_to_remove = ['is','what','in','lyra','the','curent','temperature',' ','weather']
+            query = remove_words(query, words_to_remove)
+            print(query)
             WeatherApi(query)
+
         
         elif "send message" in query or "phone call" in query or "video call" in query:
             from engine.features import findContact, whatsApp, makeCall, sendMessage
