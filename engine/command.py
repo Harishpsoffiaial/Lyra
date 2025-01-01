@@ -97,5 +97,6 @@ def allCommands(message=1):
             chatBot(query)
     except:
         print("error")
+        
     
     eel.ShowHood()
