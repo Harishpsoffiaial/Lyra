@@ -24,7 +24,7 @@ def takecommand():
         r.pause_threshold = 1
         r.adjust_for_ambient_noise(source)
     
-        audio = r.listen(source, 0, 4)
+        audio = r.listen(source, 4, 10)
 
     try:
         print('recognizing...')
@@ -60,6 +60,10 @@ def allCommands(message=1):
         elif "on youtube" in query:
             from engine.features import PlayYoutube
             PlayYoutube(query)
+        
+        elif "weather" in query:
+            from engine.features import WeatherApi
+            WeatherApi(query)
         
         elif "send message" in query or "phone call" in query or "video call" in query:
             from engine.features import findContact, whatsApp, makeCall, sendMessage
@@ -97,6 +101,6 @@ def allCommands(message=1):
             chatBot(query)
     except:
         print("error")
-        
+
     
     eel.ShowHood()

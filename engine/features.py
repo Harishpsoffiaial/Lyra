@@ -18,11 +18,13 @@ from engine.config import ASSISTANT_NAME
 # Playing assiatnt sound function
 import pywhatkit as kit
 import pvporcupine
+import requests
 from engine.helper import extract_yt_term, remove_words
 
 con = sqlite3.connect("lyra.db")
 cursor = con.cursor()
 api_key_gen = "AIzaSyD0-YO5ipWwgP_peZgoiHgJQTBx78pxv5M"
+api_key_weather="64077e46d9d0293f06e86dfd2d905d75"
 @eel.expose
 def playAssistantSound():
     music_dir = "www\\assets\\audio\\start_sound.mp3"
@@ -174,6 +176,35 @@ def whatsApp(mobile_no, message, flag, name):
     pyautogui.hotkey('enter')
     speak(lyra_message)
 
+
+# Weather API
+def WeatherApi(query):
+    query = query.replace("what is the weather in","").strip()
+    api_key = api_key_weather
+    base_url = "https://api.openweathermap.org/data/2.5/weather"
+    params = {
+        "q": query,
+        "appid": api_key,
+        "units": "metric"  # For temperature in Celsius; use "imperial" for Fahrenheit
+    }
+
+    response = requests.get(base_url, params=params)
+    
+    if response.status_code == 200:
+        data = response.json()
+        city_name = data["name"]
+        weather_desc = data["weather"][0]["description"]
+        temp = data["main"]["temp"]
+        weather_report = f"The current weather in {city_name} is {weather_desc} with a temperature of {temp:.2f}°C."
+      
+      
+        print(weather_report)
+        speak(weather_report)
+      
+        return weather_report
+    else:
+        return "Failed to fetch weather data. Please check the city name or API key." 
+
 # chat bot 
 
 def chatBot(query):
@@ -182,10 +213,10 @@ def chatBot(query):
 
     # Create the generation configuration
     generation_config = {
-        "temperature": 1,
+        "temperature": 0.5,
         "top_p": 0.95,
         "top_k": 40,
-        "max_output_tokens": 200,
+        "max_output_tokens": 128,
         "response_mime_type": "text/plain",
     }
 
@@ -205,6 +236,7 @@ def chatBot(query):
 
     # Extract the response text
     response_text = response.text
+    response_text = response_text.replace("*","")
 
     # Print and speak the response
     print(response_text)
