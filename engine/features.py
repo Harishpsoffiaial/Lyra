@@ -2,6 +2,7 @@ import os
 import sys
 sys.path.append('A:/project/Lyra')
 from shlex import quote
+import google.generativeai as genai
 import re
 import sqlite3
 import struct
@@ -19,11 +20,9 @@ import pywhatkit as kit
 import pvporcupine
 from engine.helper import extract_yt_term, remove_words
 
-from hugchat import hugchat
-
 con = sqlite3.connect("lyra.db")
 cursor = con.cursor()
-
+api_key_gen = "AIzaSyD0-YO5ipWwgP_peZgoiHgJQTBx78pxv5M"
 @eel.expose
 def playAssistantSound():
     music_dir = "www\\assets\\audio\\start_sound.mp3"
@@ -176,15 +175,43 @@ def whatsApp(mobile_no, message, flag, name):
     speak(lyra_message)
 
 # chat bot 
+
 def chatBot(query):
-    user_input = query.lower()
-    chatbot = hugchat.ChatBot(cookie_path="engine\cookies.json")
-    id = chatbot.new_conversation()
-    chatbot.change_conversation(id)
-    response =  chatbot.chat(user_input)
-    print(response)
-    speak(response)
-    return response
+    # Configure the generative AI model
+    genai.configure(api_key=api_key_gen)
+
+    # Create the generation configuration
+    generation_config = {
+        "temperature": 1,
+        "top_p": 0.95,
+        "top_k": 40,
+        "max_output_tokens": 200,
+        "response_mime_type": "text/plain",
+    }
+
+    # Initialize the generative AI model
+    model = genai.GenerativeModel(
+        model_name="gemini-2.0-flash-exp",
+        generation_config=generation_config,
+    )
+
+    # Start a new chat session
+    chat_session = model.start_chat(
+        history=[]
+    )
+
+    # Send the user's query to the chat model
+    response = chat_session.send_message(query)
+
+    # Extract the response text
+    response_text = response.text
+
+    # Print and speak the response
+    print(response_text)
+    speak(response_text)
+
+    return response_text
+
 
 # android automation
 
