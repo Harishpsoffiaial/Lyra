@@ -59,10 +59,12 @@ def allCommands(message=1):
             from engine.features import openCommand
             openCommand(query)
         elif "on youtube" in query:
+            query.lower()
             from engine.features import PlayYoutube
             PlayYoutube(query)
         
         elif "weather" in query:
+            query.lower()
             from engine.features import WeatherApi
             words_to_remove = ['is','what','in','lyra','the','curent','temperature',' ','weather']
             query = remove_words(query, words_to_remove)
@@ -71,6 +73,7 @@ def allCommands(message=1):
 
         
         elif "send message" in query or "phone call" in query or "video call" in query:
+            query.lower()
             from engine.features import findContact, whatsApp, makeCall, sendMessage
             contact_no, name = findContact(query)
             if(contact_no != 0):

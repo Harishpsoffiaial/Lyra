@@ -34,15 +34,16 @@ def playAssistantSound():
 def openCommand(query):
     query = query.replace(ASSISTANT_NAME, "")
     query = query.replace("open", "")
-    query.lower()
-
-    app_name = query.strip()
+    
+    # Make the query lowercase to ignore case differences
+    app_name = query.strip().lower()
 
     if app_name != "":
 
         try:
+            # Modify the query to search case-insensitively in the database
             cursor.execute(
-                'SELECT path FROM sys_command WHERE name IN (?)', (app_name,))
+                'SELECT path FROM sys_command WHERE LOWER(name) = ?', (app_name,))
             results = cursor.fetchall()
 
             if len(results) != 0:
@@ -51,7 +52,7 @@ def openCommand(query):
 
             elif len(results) == 0: 
                 cursor.execute(
-                'SELECT url FROM web_command WHERE name IN (?)', (app_name,))
+                    'SELECT url FROM web_command WHERE LOWER(name) = ?', (app_name,))
                 results = cursor.fetchall()
                 
                 if len(results) != 0:
@@ -63,10 +64,9 @@ def openCommand(query):
                     try:
                         os.system('start '+query)
                     except:
-                        speak("not found")
+                        speak("Not found")
         except:
-            speak("some thing went wrong")
-
+            speak("Something went wrong")
        
 
 def PlayYoutube(query):
