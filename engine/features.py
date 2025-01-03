@@ -207,42 +207,105 @@ def WeatherApi(query):
 
 # chat bot 
 
-def chatBot(query):
+
+def chatBot(query, chat_history=None, model_name="gemini-2.0-flash-exp", max_tokens=128):
+    """
+    Handles interaction with a generative AI chatbot.
+
+    Args:
+        query (str): User's input query.
+        chat_history (list, optional): List of previous conversation turns for context. Defaults to an empty list.
+        model_name (str, optional): Name of the AI model to use. Defaults to "gemini-2.0-flash-exp".
+        max_tokens (int, optional): Maximum number of tokens in the response. Defaults to 128.
+
+    Returns:
+        str: Response from the chatbot.
+    """
     # Configure the generative AI model
-    genai.configure(api_key=api_key_gen)
+    try:
+        genai.configure(api_key=api_key_gen)
+    except Exception as e:
+        print(f"Error configuring generative AI: {e}")
+        return "An error occurred while setting up the AI model."
 
     # Create the generation configuration
     generation_config = {
-        "temperature": 0.5,
-        "top_p": 0.95,
-        "top_k": 40,
-        "max_output_tokens": 128,
+        "temperature": 0.3,
+        "top_p": 0.8,
+        "top_k": 20,
+        "max_output_tokens": max_tokens,
         "response_mime_type": "text/plain",
     }
 
     # Initialize the generative AI model
-    model = genai.GenerativeModel(
-        model_name="gemini-2.0-flash-exp",
-        generation_config=generation_config,
-    )
+    try:
+        model = genai.GenerativeModel(
+            model_name=model_name,
+            generation_config=generation_config,
+        )
+    except Exception as e:
+        print(f"Error initializing the AI model: {e}")
+        return "An error occurred while initializing the AI model."
 
-    # Start a new chat session
-    chat_session = model.start_chat(
-        history=[]
-    )
+    # Start a new chat session or use provided history
+    chat_history = chat_history if chat_history else []
+    try:
+        chat_session = model.start_chat(history=chat_history)
+    except Exception as e:
+        print(f"Error starting chat session: {e}")
+        return "An error occurred while starting the chat session."
 
     # Send the user's query to the chat model
-    response = chat_session.send_message(query)
-
-    # Extract the response text
-    response_text = response.text
-    response_text = response_text.replace("*","")
+    try:
+        response = chat_session.send_message(query)
+        response_text = response.text.replace("*", "")
+    except Exception as e:
+        print(f"Error sending message: {e}")
+        return "An error occurred while communicating with the AI."
 
     # Print and speak the response
     print(response_text)
     speak(response_text)
 
     return response_text
+
+
+# def chatBot(query):
+#     # Configure the generative AI model
+#     genai.configure(api_key=api_key_gen)
+
+#     # Create the generation configuration
+#     generation_config = {
+#         "temperature": 0.5,
+#         "top_p": 0.95,
+#         "top_k": 40,
+#         "max_output_tokens": 128,
+#         "response_mime_type": "text/plain",
+#     }
+
+#     # Initialize the generative AI model
+#     model = genai.GenerativeModel(
+#         model_name="gemini-2.0-flash-exp",
+#         generation_config=generation_config,
+#     )
+
+#     # Start a new chat session
+#     chat_session = model.start_chat(
+#         history=[]
+#     )
+
+#     # Send the user's query to the chat model
+#     response = chat_session.send_message(query)
+
+#     # Extract the response text
+#     response_text = response.text
+#     response_text = response_text.replace("*","")
+
+#     # Print and speak the response
+#     print(response_text)
+#     speak(response_text)
+
+#     return response_text
 
 
 # android automation

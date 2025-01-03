@@ -25,7 +25,7 @@ def takecommand():
         r.pause_threshold = 1
         r.adjust_for_ambient_noise(source)
     
-        audio = r.listen(source, 4, 15)
+        audio = r.listen(source, 4, 10)
 
     try:
         print('recognizing...')
@@ -66,7 +66,16 @@ def allCommands(message=1):
         elif "weather" in query:
             query.lower()
             from engine.features import WeatherApi
-            words_to_remove = ['is','what','in','lyra','the','curent','temperature',' ','weather']
+            words_to_remove = ['is','what','in','lyra','the','current','temperature',' ','weather']
+            query = remove_words(query, words_to_remove)
+            print(query)
+            WeatherApi(query)
+
+
+        elif "temperature" in query:
+            query.lower()
+            from engine.features import WeatherApi
+            words_to_remove = ['is','what','in','lyra','the','current','temperature',' ','weather']
             query = remove_words(query, words_to_remove)
             print(query)
             WeatherApi(query)
